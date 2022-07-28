@@ -1,0 +1,16 @@
+syntax = "proto3";
+package scheduler;
+
+option go_package = "simone.paris/protobufs/scheduler";
+
+service Scheduler {
+  rpc GetResource(ResourceRequest) returns (Resource) {}
+}
+
+message Resource {
+  string id = 1;
+}
+
+message ResourceRequest {
+  string id = 1;
+}
