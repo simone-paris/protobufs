@@ -1,7 +1,8 @@
 syntax = "proto3";
-package scheduler;
 
-option go_package = "simone.paris/protobufs/scheduler";
+option go_package = "github.com/simone.paris/protobufs/scheduler/v1";
+
+package scheduler;
 
 service Scheduler {
   rpc GetResource(ResourceRequest) returns (Resource) {}
