@@ -22,8 +22,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type SchedulerClient interface {
-	GetCalendar(ctx context.Context, in *GetCalendarRequest, opts ...grpc.CallOption) (*Calendar, error)
-	CreateCalendarWithCode(ctx context.Context, in *CreateCalendarWithCodeRequest, opts ...grpc.CallOption) (*Calendar, error)
+	AuthorizeAccount(ctx context.Context, in *AuthorizeAccountRequest, opts ...grpc.CallOption) (*AuthorizeAccountResponse, error)
 }
 
 type schedulerClient struct {
@@ -34,18 +33,9 @@ func NewSchedulerClient(cc grpc.ClientConnInterface) SchedulerClient {
 	return &schedulerClient{cc}
 }
 
-func (c *schedulerClient) GetCalendar(ctx context.Context, in *GetCalendarRequest, opts ...grpc.CallOption) (*Calendar, error) {
-	out := new(Calendar)
-	err := c.cc.Invoke(ctx, "/scheduler.Scheduler/GetCalendar", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *schedulerClient) CreateCalendarWithCode(ctx context.Context, in *CreateCalendarWithCodeRequest, opts ...grpc.CallOption) (*Calendar, error) {
-	out := new(Calendar)
-	err := c.cc.Invoke(ctx, "/scheduler.Scheduler/CreateCalendarWithCode", in, out, opts...)
+func (c *schedulerClient) AuthorizeAccount(ctx context.Context, in *AuthorizeAccountRequest, opts ...grpc.CallOption) (*AuthorizeAccountResponse, error) {
+	out := new(AuthorizeAccountResponse)
+	err := c.cc.Invoke(ctx, "/scheduler.Scheduler/AuthorizeAccount", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -56,8 +46,7 @@ func (c *schedulerClient) CreateCalendarWithCode(ctx context.Context, in *Create
 // All implementations must embed UnimplementedSchedulerServer
 // for forward compatibility
 type SchedulerServer interface {
-	GetCalendar(context.Context, *GetCalendarRequest) (*Calendar, error)
-	CreateCalendarWithCode(context.Context, *CreateCalendarWithCodeRequest) (*Calendar, error)
+	AuthorizeAccount(context.Context, *AuthorizeAccountRequest) (*AuthorizeAccountResponse, error)
 	mustEmbedUnimplementedSchedulerServer()
 }
 
@@ -65,11 +54,8 @@ type SchedulerServer interface {
 type UnimplementedSchedulerServer struct {
 }
 
-func (UnimplementedSchedulerServer) GetCalendar(context.Context, *GetCalendarRequest) (*Calendar, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetCalendar not implemented")
-}
-func (UnimplementedSchedulerServer) CreateCalendarWithCode(context.Context, *CreateCalendarWithCodeRequest) (*Calendar, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateCalendarWithCode not implemented")
+func (UnimplementedSchedulerServer) AuthorizeAccount(context.Context, *AuthorizeAccountRequest) (*AuthorizeAccountResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AuthorizeAccount not implemented")
 }
 func (UnimplementedSchedulerServer) mustEmbedUnimplementedSchedulerServer() {}
 
@@ -84,38 +70,20 @@ func RegisterSchedulerServer(s grpc.ServiceRegistrar, srv SchedulerServer) {
 	s.RegisterService(&Scheduler_ServiceDesc, srv)
 }
 
-func _Scheduler_GetCalendar_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetCalendarRequest)
+func _Scheduler_AuthorizeAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AuthorizeAccountRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(SchedulerServer).GetCalendar(ctx, in)
+		return srv.(SchedulerServer).AuthorizeAccount(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/scheduler.Scheduler/GetCalendar",
+		FullMethod: "/scheduler.Scheduler/AuthorizeAccount",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SchedulerServer).GetCalendar(ctx, req.(*GetCalendarRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Scheduler_CreateCalendarWithCode_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateCalendarWithCodeRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(SchedulerServer).CreateCalendarWithCode(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/scheduler.Scheduler/CreateCalendarWithCode",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SchedulerServer).CreateCalendarWithCode(ctx, req.(*CreateCalendarWithCodeRequest))
+		return srv.(SchedulerServer).AuthorizeAccount(ctx, req.(*AuthorizeAccountRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -128,12 +96,8 @@ var Scheduler_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*SchedulerServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetCalendar",
-			Handler:    _Scheduler_GetCalendar_Handler,
-		},
-		{
-			MethodName: "CreateCalendarWithCode",
-			Handler:    _Scheduler_CreateCalendarWithCode_Handler,
+			MethodName: "AuthorizeAccount",
+			Handler:    _Scheduler_AuthorizeAccount_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
