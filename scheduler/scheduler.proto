@@ -5,13 +5,14 @@ option go_package = "github.com/simone-paris/protobufs/scheduler/gen/go";
 package scheduler;
 
 service Scheduler {
-  rpc GetResource(ResourceRequest) returns (Resource) {}
+  rpc GetCalendar(GetCalendarRequest) returns (Calendar) {}
+  rpc CreateCalendarWithCode(CreateCalendarWithCodeRequest) returns (Calendar) {
+  }
 }
 
-message Resource {
-  string id = 1;
+message Calendar {
+  string Id = 1;
+  string Name = 2;
 }
-
-message ResourceRequest {
-  string id = 1;
-}
+message GetCalendarRequest { int32 AccountId = 1; }
+message CreateCalendarWithCodeRequest { string code = 1; }
