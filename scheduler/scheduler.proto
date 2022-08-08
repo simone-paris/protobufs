@@ -24,11 +24,11 @@ message GetCalendarsRequest {
   string refresh_token = 2;
   string account_id = 3;
 }
+message Calendar {
+  string id = 1;
+  string name = 2;
+  string provider_name = 3;
+}
 message GetCalendarsResponse {
-  message Calendar {
-    string id = 1;
-    string name = 2;
-    string provider_name = 3;
-  }
   repeated Calendar calendars = 1;
 }
