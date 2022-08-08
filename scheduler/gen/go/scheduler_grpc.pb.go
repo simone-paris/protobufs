@@ -23,6 +23,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type SchedulerClient interface {
 	AuthorizeAccount(ctx context.Context, in *AuthorizeAccountRequest, opts ...grpc.CallOption) (*AuthorizeAccountResponse, error)
+	GetCalendars(ctx context.Context, in *AuthorizeAccountRequest, opts ...grpc.CallOption) (*AuthorizeAccountResponse, error)
 }
 
 type schedulerClient struct {
@@ -42,11 +43,21 @@ func (c *schedulerClient) AuthorizeAccount(ctx context.Context, in *AuthorizeAcc
 	return out, nil
 }
 
+func (c *schedulerClient) GetCalendars(ctx context.Context, in *AuthorizeAccountRequest, opts ...grpc.CallOption) (*AuthorizeAccountResponse, error) {
+	out := new(AuthorizeAccountResponse)
+	err := c.cc.Invoke(ctx, "/scheduler.Scheduler/GetCalendars", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // SchedulerServer is the server API for Scheduler service.
 // All implementations must embed UnimplementedSchedulerServer
 // for forward compatibility
 type SchedulerServer interface {
 	AuthorizeAccount(context.Context, *AuthorizeAccountRequest) (*AuthorizeAccountResponse, error)
+	GetCalendars(context.Context, *AuthorizeAccountRequest) (*AuthorizeAccountResponse, error)
 	mustEmbedUnimplementedSchedulerServer()
 }
 
@@ -56,6 +67,9 @@ type UnimplementedSchedulerServer struct {
 
 func (UnimplementedSchedulerServer) AuthorizeAccount(context.Context, *AuthorizeAccountRequest) (*AuthorizeAccountResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AuthorizeAccount not implemented")
+}
+func (UnimplementedSchedulerServer) GetCalendars(context.Context, *AuthorizeAccountRequest) (*AuthorizeAccountResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCalendars not implemented")
 }
 func (UnimplementedSchedulerServer) mustEmbedUnimplementedSchedulerServer() {}
 
@@ -88,6 +102,24 @@ func _Scheduler_AuthorizeAccount_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Scheduler_GetCalendars_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AuthorizeAccountRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SchedulerServer).GetCalendars(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/scheduler.Scheduler/GetCalendars",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SchedulerServer).GetCalendars(ctx, req.(*AuthorizeAccountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Scheduler_ServiceDesc is the grpc.ServiceDesc for Scheduler service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -98,6 +130,10 @@ var Scheduler_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AuthorizeAccount",
 			Handler:    _Scheduler_AuthorizeAccount_Handler,
+		},
+		{
+			MethodName: "GetCalendars",
+			Handler:    _Scheduler_GetCalendars_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
