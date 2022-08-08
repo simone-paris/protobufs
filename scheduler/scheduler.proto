@@ -7,8 +7,7 @@ package scheduler;
 service Scheduler {
   rpc AuthorizeAccount(AuthorizeAccountRequest)
       returns (AuthorizeAccountResponse) {}
-  rpc GetCalendars(AuthorizeAccountRequest) returns (AuthorizeAccountResponse) {
-  }
+  rpc GetCalendars(GetCalendarsRequest) returns (GetCalendarsResponse) {}
 }
 
 message AuthorizeAccountRequest {

@@ -23,7 +23,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type SchedulerClient interface {
 	AuthorizeAccount(ctx context.Context, in *AuthorizeAccountRequest, opts ...grpc.CallOption) (*AuthorizeAccountResponse, error)
-	GetCalendars(ctx context.Context, in *AuthorizeAccountRequest, opts ...grpc.CallOption) (*AuthorizeAccountResponse, error)
+	GetCalendars(ctx context.Context, in *GetCalendarsRequest, opts ...grpc.CallOption) (*GetCalendarsResponse, error)
 }
 
 type schedulerClient struct {
@@ -43,8 +43,8 @@ func (c *schedulerClient) AuthorizeAccount(ctx context.Context, in *AuthorizeAcc
 	return out, nil
 }
 
-func (c *schedulerClient) GetCalendars(ctx context.Context, in *AuthorizeAccountRequest, opts ...grpc.CallOption) (*AuthorizeAccountResponse, error) {
-	out := new(AuthorizeAccountResponse)
+func (c *schedulerClient) GetCalendars(ctx context.Context, in *GetCalendarsRequest, opts ...grpc.CallOption) (*GetCalendarsResponse, error) {
+	out := new(GetCalendarsResponse)
 	err := c.cc.Invoke(ctx, "/scheduler.Scheduler/GetCalendars", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -57,7 +57,7 @@ func (c *schedulerClient) GetCalendars(ctx context.Context, in *AuthorizeAccount
 // for forward compatibility
 type SchedulerServer interface {
 	AuthorizeAccount(context.Context, *AuthorizeAccountRequest) (*AuthorizeAccountResponse, error)
-	GetCalendars(context.Context, *AuthorizeAccountRequest) (*AuthorizeAccountResponse, error)
+	GetCalendars(context.Context, *GetCalendarsRequest) (*GetCalendarsResponse, error)
 	mustEmbedUnimplementedSchedulerServer()
 }
 
@@ -68,7 +68,7 @@ type UnimplementedSchedulerServer struct {
 func (UnimplementedSchedulerServer) AuthorizeAccount(context.Context, *AuthorizeAccountRequest) (*AuthorizeAccountResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AuthorizeAccount not implemented")
 }
-func (UnimplementedSchedulerServer) GetCalendars(context.Context, *AuthorizeAccountRequest) (*AuthorizeAccountResponse, error) {
+func (UnimplementedSchedulerServer) GetCalendars(context.Context, *GetCalendarsRequest) (*GetCalendarsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCalendars not implemented")
 }
 func (UnimplementedSchedulerServer) mustEmbedUnimplementedSchedulerServer() {}
@@ -103,7 +103,7 @@ func _Scheduler_AuthorizeAccount_Handler(srv interface{}, ctx context.Context, d
 }
 
 func _Scheduler_GetCalendars_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AuthorizeAccountRequest)
+	in := new(GetCalendarsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -115,7 +115,7 @@ func _Scheduler_GetCalendars_Handler(srv interface{}, ctx context.Context, dec f
 		FullMethod: "/scheduler.Scheduler/GetCalendars",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SchedulerServer).GetCalendars(ctx, req.(*AuthorizeAccountRequest))
+		return srv.(SchedulerServer).GetCalendars(ctx, req.(*GetCalendarsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
