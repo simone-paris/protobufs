@@ -30,4 +30,5 @@ message GetCalendarsResponse {
     string name = 2;
     string provider_name = 3;
   }
+  repeated Calendar calendars = 1;
 }
