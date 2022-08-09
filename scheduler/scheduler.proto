@@ -6,8 +6,8 @@ package scheduler;
 
 service Scheduler {
   rpc AuthorizeAccount(AuthorizeAccountRequest)
-      returns (AuthorizeAccountResponse) {}
-  rpc GetCalendars(GetCalendarsRequest) returns (GetCalendarsResponse) {}
+      returns (AuthorizeAccountResponse);
+  rpc GetCalendars(GetCalendarsRequest) returns (GetCalendarsResponse);
 }
 
 message AuthorizeAccountRequest {
@@ -19,16 +19,13 @@ message AuthorizeAccountResponse {
   string access_token = 2;
   string refresh_token = 3;
 }
-message GetCalendarsRequest {
-  string access_token = 1;
-  string refresh_token = 2;
-  string account_id = 3;
-}
+message GetCalendarsRequest { string account_id = 3; }
 message Calendar {
   string id = 1;
   string name = 2;
   string provider_name = 3;
+  bool primary = 4;
+  string profile_id = 5;
+  string profile_name = 6;
 }
-message GetCalendarsResponse {
-  repeated Calendar calendars = 1;
-}
+message GetCalendarsResponse { repeated Calendar calendars = 1; }
